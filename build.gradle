@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    karateVersion = '1.2.0'
+    cucumberReportVersion = '5.7.4'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+dependencies {
+    testImplementation "com.intuit.karate:karate-junit5:$karateVersion"
+    testImplementation "net.masterthought:cucumber-reporting:$cucumberReportVersion"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'com.intuit.karate:karate-junit5:1.2.0'
+
+}
+
+sourceSets {
+    test {
+        resources {
+            srcDir file('src/test/java')
+            exclude '**/*.java'
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()// junit5
+    systemProperty "karate.env", System.properties.getProperty("karate.env")
+    outputs.upToDateWhen { false }
+    include '**/*Test.class', '**/*Runner.class'
+}
+testing {
+    suites {
+        test {
+            useJUnitJupiter()
+        }
+    }
+}
